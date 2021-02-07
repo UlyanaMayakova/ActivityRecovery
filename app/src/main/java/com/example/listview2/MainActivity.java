@@ -25,8 +25,10 @@ public class MainActivity extends AppCompatActivity {
 
     private final static String SHARED_NAME = "prefs";
     private final static String KEY = "key";
+    private final static String DELETE_KEY = "delete";
 
-    private List<Map<String, String>> list = new ArrayList<>();
+    private final List<Map<String, String>> list = new ArrayList<>();
+    private ArrayList<Integer> deleteList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +44,18 @@ public class MainActivity extends AppCompatActivity {
         final BaseAdapter adapter = createAdapter(list);
         listView.setAdapter(adapter);
 
+//        SimpleAdapter simpleAdapter = new SimpleAdapter(this, deleteList, )
+
+        if(savedInstanceState != null && savedInstanceState.containsKey(DELETE_KEY)) {
+            deleteList = savedInstanceState.getIntegerArrayList(DELETE_KEY);
+        }
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View itemClicked, int position, long id) {
                 list.remove(position);
                 adapter.notifyDataSetChanged();
+                deleteList.add(position);
             }
         });
 
@@ -60,6 +69,12 @@ public class MainActivity extends AppCompatActivity {
                 swipe.setRefreshing(false);
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putIntegerArrayList(DELETE_KEY, deleteList);
     }
 
     private void init() {
