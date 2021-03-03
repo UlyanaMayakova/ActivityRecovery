@@ -44,10 +44,11 @@ public class MainActivity extends AppCompatActivity {
         final BaseAdapter adapter = createAdapter(list);
         listView.setAdapter(adapter);
 
-//        SimpleAdapter simpleAdapter = new SimpleAdapter(this, deleteList, )
-
         if(savedInstanceState != null && savedInstanceState.containsKey(DELETE_KEY)) {
             deleteList = savedInstanceState.getIntegerArrayList(DELETE_KEY);
+            for (int index : deleteList) {
+                list.remove(index);
+            }
         }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 list.clear();
                 init();
                 adapter.notifyDataSetChanged();
+                deleteList.clear();
                 swipe.setRefreshing(false);
             }
         });
